@@ -1,6 +1,17 @@
 - What's the differences between 02_nlp.ipynb, 02_nlp_v4_revised.ipynb, and 02_nlp_v6_final.ipynb
 
 
+- 02_nlp.ipynb: 
+1. Language analysis on full review dataset 
+2. Distribution and trend on full dataset, sentiment on full dataset (VADER), asepect-based (sentence-level) analysis results on full dataset
+
+
+
+- 02_nlp_v4_revised.ipynb: 
+1. Sampled 4000 reviews from each city from full review dataset for TF-IDF and LDA 
+2. Completed the full pipeline
+
+
 - 02_nlp_v6_final changes: 
 
  1. Config RATING_HIGH_MIN changed from 4.85 → 4.
