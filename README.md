@@ -17,7 +17,6 @@ The analysis focuses on:
 - quantifying sentiment (overall + aspect-based),
 - extracting key topics with LDA,
 - predicting listing quality tiers from review text/features,
-- evaluating model transferability across cities (LOCO CV in sampled pipeline).
 
 ## Repository Structure
 
@@ -30,7 +29,7 @@ Main files and folders:
 - `02_nlp_full_data_EDA.ipynb`  
   Full-data NLP/EDA pipeline (language detection, preprocessing, TF-IDF, VADER, aspect sentiment, LDA, rating prediction baseline/comparison).
 - `full_nlp_pipeline_for_sampled_data.ipynb`  
-  Sampled modeling pipeline with balanced per-city sampling, negation-safe preprocessing, LDA, multiple classifiers, and LOCO evaluation.
+  Sampled modeling pipeline with balanced per-city sampling, negation-safe preprocessing, LDA, and multiple classifiers.
 - `00_setup.sh`  
   One-time environment setup helper (virtualenv + pip installs + spaCy model).
 
