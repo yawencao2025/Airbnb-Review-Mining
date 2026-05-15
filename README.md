@@ -27,22 +27,13 @@ Main files and folders:
   Pre-analysis data inspection (file inventory, single-city checks, all-city summary, optional SQLite checks after ingest).
 - `01_ingest.ipynb`  
   Full ingest + cleaning + EDA + SQLite and Parquet writes.
-- `01_ingest.py`  
-  Script version of Phase 1 ingest for command-line execution.
 - `02_nlp_full_data_EDA.ipynb`  
   Full-data NLP/EDA pipeline (language detection, preprocessing, TF-IDF, VADER, aspect sentiment, LDA, rating prediction baseline/comparison).
-- `02_nlp_sampled_pipeline.ipynb`  
+- `full_nlp_pipeline_for_sampled_data.ipynb`  
   Sampled modeling pipeline with balanced per-city sampling, negation-safe preprocessing, LDA, multiple classifiers, and LOCO evaluation.
 - `00_setup.sh`  
   One-time environment setup helper (virtualenv + pip installs + spaCy model).
-- `csv/`  
-  Input city files (`listings_*_clean.csv`, `reviews_*_clean.csv` expected by ingest).
-- `parquet/`  
-  Intermediate and final parquet datasets.
-- `outputs/`  
-  Model/topic/prediction CSVs and generated figures.
-- `airbnb.db`  
-  SQLite database produced by ingestion.
+
 
 ## Data Flow Overview
 
@@ -52,9 +43,9 @@ Main files and folders:
    Combine all cities, normalize key fields, deduplicate IDs, validate join coverage, write SQLite and Parquet.
 3. **Run NLP analysis**:
    - Full-data analysis in `02_nlp_full_data_EDA.ipynb`, or
-   - Sampled modeling pipeline in `02_nlp_sampled_pipeline.ipynb`.
+   - Sampled modeling pipeline in `full_nlp_pipeline_for_sampled_data.ipynb`.
 
-## Outputs Produced
+## Outputs Produced (outputs are not uploaded to Github due to big data file size)
 
 ### From Ingest Phase
 
@@ -72,7 +63,7 @@ Main files and folders:
 - `outputs/predictions.csv`
 - plus in-notebook figures and diagnostics
 
-### From Sampled NLP Notebook (`02_nlp_sampled_pipeline.ipynb`)
+### From Sampled NLP Notebook (`full_nlp_pipeline_for_sampled_data.ipynb`)
 
 - checkpoint parquet during pipeline steps
 - final sentiment/topic/model parquet (current notebook cell writes `reviews_sentiment_lda_machinelearning4.parquet`)
@@ -107,26 +98,9 @@ Notes:
 - `xgboost` is required by `02_nlp_sampled_pipeline.ipynb`.
 - `nltk` resources are downloaded inside notebooks (`punkt`, `punkt_tab`, `stopwords`).
 
-## Important Path Configuration
 
-The notebooks/scripts currently hardcode:
 
-`~/Desktop/MSIS/TEXT_MINING_NLP/Project/code2`
-
-If your actual folder differs (for example this repo is under `code2 copy`), update `BASE_DIR` in notebook config cells and in any scripts before running.
-
-At minimum, confirm these variables resolve correctly:
-
-- `BASE_DIR`
-- `CSV_DIR`
-- `PARQUET_DIR`
-- `OUTPUT_DIR`
-- `DB_PATH`
-
-## How To Run (Recommended Order)
-
-### Option A: Notebook-first workflow
-
+## How To Run (Further data request is required for running notebooks)
 1. Launch Jupyter:
 
    ```bash
@@ -140,15 +114,7 @@ At minimum, confirm these variables resolve correctly:
      - `02_nlp_full_data_EDA.ipynb` (full data, slower), or
      - `02_nlp_sampled_pipeline.ipynb` (balanced sampled pipeline, additional model comparisons)
 
-### Option B: Script ingest + notebook NLP
 
-1. Build core data assets:
-
-   ```bash
-   python3 01_ingest.py
-   ```
-
-2. Open and run either NLP notebook (`02_nlp_full_data_EDA.ipynb` or `02_nlp_sampled_pipeline.ipynb`).
 
 ## Notebook-by-Notebook Documentation
 
@@ -168,7 +134,7 @@ Purpose:
 - validate data availability/consistency before expensive processing,
 - quickly inspect anomalies and distributions.
 
-### `01_ingest.ipynb` / `01_ingest.py` (Phase 1 Ingest)
+### `01_ingest.ipynb` (Phase 1 Ingest)
 
 Key logic:
 
@@ -201,7 +167,7 @@ Characteristics:
 - highest data coverage,
 - longest runtime (language detection and full-data transforms are expensive).
 
-### `02_nlp_sampled_pipeline.ipynb` (Sampled/Modeling Pipeline)
+### `full_nlp_pipeline_for_sampled_data.ipynb` (Sampled/Modeling Pipeline)
 
 Key sections:
 
@@ -243,33 +209,4 @@ For best stability:
 - do not mix outputs from different `BASE_DIR` locations,
 - clear/rename old output files if running multiple experimental variants.
 
-## Common Troubleshooting
 
-- **File not found for CSV/Parquet/DB**  
-  Usually `BASE_DIR` mismatch. Update path variables and rerun from top.
-- **Missing package errors**  
-  Re-activate `venv` and reinstall dependencies.
-- **spaCy model not found**  
-  Run `python -m spacy download en_core_web_sm`.
-- **Long language detection runtime**  
-  Use sampled notebook for faster experimentation.
-- **Output filename mismatch in sampled notebook**  
-  The notebook currently writes `reviews_sentiment_lda_machinelearning4.parquet`; rename in notebook if you prefer a stable canonical name.
-
-## Suggested Minimal Run Checklist
-
-1. Activate `venv`.
-2. Confirm `BASE_DIR` in notebook config cell(s).
-3. Run `01_ingest.py` (or `01_ingest.ipynb`).
-4. Verify created files in `parquet/`.
-5. Run one NLP notebook end-to-end.
-6. Verify `outputs/` artifacts and final parquet outputs.
-
----
-
-If you plan to share this repository publicly, consider adding:
-
-- `requirements.txt` (pinned versions),
-- environment metadata (Python version),
-- a small sample dataset or download instructions,
-- and a single canonical final-output naming convention in the sampled pipeline notebook.
